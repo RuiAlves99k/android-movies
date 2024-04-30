@@ -1,4 +1,4 @@
-package com.appsrui.movies.ui.theme
+package com.appsrui.movies.presentation.theme
 
 import android.app.Activity
 import android.os.Build
