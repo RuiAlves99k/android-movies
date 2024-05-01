@@ -1,5 +1,6 @@
 package com.appsrui.movies.presentation.details
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.appsrui.movies.common.UiEvents
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +13,9 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class MovieDetailsViewModel @Inject constructor() : ViewModel() {
+class MovieDetailsViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
 
     private val _movieDetailsUiState = MutableStateFlow(MovieDetailsUiState())
     val movieDetailsUiState = _movieDetailsUiState.asStateFlow()
