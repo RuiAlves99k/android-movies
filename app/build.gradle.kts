@@ -1,13 +1,14 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.androidHilt)
+    id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
 }
 
 android {
     namespace = "com.appsrui.movies"
     compileSdk = 34
+    buildToolsVersion = "34"
 
     defaultConfig {
         applicationId = "com.appsrui.movies"
@@ -32,17 +33,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_19
+        targetCompatibility = JavaVersion.VERSION_19
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "19"
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
     packaging {
         resources {
@@ -80,4 +81,5 @@ dependencies {
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
     implementation(libs.coil)
+    implementation(libs.viewmodel.compose)
 }
