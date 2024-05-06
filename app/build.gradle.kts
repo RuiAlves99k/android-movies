@@ -1,8 +1,17 @@
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
+}
+
+val apiFile = rootProject.file("api.properties")
+val apiProperties = Properties().also {
+    it.load(FileInputStream(apiFile))
 }
 
 android {
@@ -21,6 +30,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "API_BASE_URL", "\"https://api.themoviedb.org\"")
+        buildConfigField("String", "API_TOKEN", apiProperties.getProperty("TOKEN"))
+        buildConfigField("String", "API_BASE_URL_TRAILER", "\"https://api.kinocheck.de\"")
     }
 
     buildTypes {
@@ -41,6 +53,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.13"

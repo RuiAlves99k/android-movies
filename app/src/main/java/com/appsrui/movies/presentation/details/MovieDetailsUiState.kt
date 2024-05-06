@@ -1,11 +1,11 @@
 package com.appsrui.movies.presentation.details
 
-import com.appsrui.movies.data.remote.MoviesResponse
+import com.appsrui.movies.data.remote.MovieResponse
 
 data class MovieDetailsUiState(
     val isLoading: Boolean = false,
     val movieDetails: MovieDetailsUi? = null,
-    val similarMovies: List<MoviesResponse.MovieDetails> = emptyList(),
+    val similarMovies: List<MovieResponse.MovieDetails> = emptyList(),
     val errorMessage: String? = null,
 )
 
