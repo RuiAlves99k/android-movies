@@ -18,10 +18,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.appsrui.movies.common.UiEvents
-import com.appsrui.movies.data.remote.MoviesResponse
+import com.appsrui.movies.data.remote.MovieResponse
 import com.appsrui.movies.presentation.composables.SearchMovieTextField
 import com.appsrui.movies.presentation.theme.MoviesTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -85,7 +84,7 @@ fun HomeScreen(
 }
 
 val movies = listOf(
-    MoviesResponse.MovieDetails(
+    MovieResponse.MovieDetails(
         id = 1,
         averageVote = 9.0,
         moviePosterUrl = "https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_Ratio0.6716_AL_.jpg",
@@ -95,7 +94,7 @@ val movies = listOf(
         year = "2023",
         overview = "-----",
     ),
-    MoviesResponse.MovieDetails(
+    MovieResponse.MovieDetails(
         id = 1,
         averageVote = 8.0,
         moviePosterUrl = "https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_Ratio0.6716_AL_.jpg",
@@ -105,7 +104,7 @@ val movies = listOf(
         year = "2023",
         overview = "-----",
     ),
-    MoviesResponse.MovieDetails(
+    MovieResponse.MovieDetails(
         id = 1,
         averageVote = 8.2,
         moviePosterUrl = "https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_Ratio0.6716_AL_.jpg",
@@ -115,7 +114,7 @@ val movies = listOf(
         year = "2023",
         overview = "-----",
     ),
-    MoviesResponse.MovieDetails(
+    MovieResponse.MovieDetails(
         id = 1,
         averageVote = 7.4,
         moviePosterUrl = "https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_Ratio0.6716_AL_.jpg",

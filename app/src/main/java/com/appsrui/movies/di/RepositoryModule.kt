@@ -1,6 +1,6 @@
 package com.appsrui.movies.di
 
-import com.appsrui.movies.data.remote.TMBDBApi
+import com.appsrui.movies.data.remote.TMDBApi
 import com.appsrui.movies.data.repository.ApiMovieRepository
 import dagger.Module
 import dagger.Provides
@@ -13,7 +13,8 @@ import javax.inject.Singleton
 object RepositoryModule {
     @Provides
     @Singleton
-    fun provideMoviesRepository(TMDBApi: TMBDBApi): ApiMovieRepository {
+    fun provideMoviesRepository(TMDBApi: TMDBApi): ApiMovieRepository {
         return ApiMovieRepository()
     }
+
 }

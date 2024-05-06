@@ -2,7 +2,7 @@ package com.appsrui.movies.data.remote
 
 import com.google.gson.annotations.SerializedName
 
-data class MoviesResponse(
+data class MovieResponse(
     val page: Int,
     val results: List<MovieDetails>
 ) {
