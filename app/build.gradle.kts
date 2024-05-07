@@ -32,6 +32,7 @@ android {
         }
         buildConfigField("String", "API_BASE_URL", "\"https://api.themoviedb.org\"")
         buildConfigField("String", "API_TOKEN", apiProperties.getProperty("TOKEN"))
+        buildConfigField("String", "API_KEY", apiProperties.getProperty("API"))
         buildConfigField("String", "API_BASE_URL_TRAILER", "\"https://api.kinocheck.de\"")
     }
 

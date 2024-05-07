@@ -6,7 +6,7 @@ import retrofit2.http.Query
 
 interface KinocheckApi {
     @GET("/movies")
-    fun getTrailer(
+    suspend fun getTrailer(
         @Query("tmdb_id") tmdbId: Int,
     ): Response<TrailerResponse>
 }

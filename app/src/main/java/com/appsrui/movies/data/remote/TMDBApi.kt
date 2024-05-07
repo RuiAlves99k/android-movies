@@ -1,11 +1,15 @@
 package com.appsrui.movies.data.remote
 
+import com.appsrui.movies.BuildConfig
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface TMDBApi {
     @GET("/3/movie/popular")
-    fun getPopularMovies(): Response<MovieResponse>
+    suspend fun getPopularMovies(
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+    ): Response<MovieResponse>
 
     fun searchMovie(): Response<MovieResponse>
 
