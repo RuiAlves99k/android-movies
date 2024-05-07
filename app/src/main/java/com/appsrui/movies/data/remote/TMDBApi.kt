@@ -11,7 +11,11 @@ interface TMDBApi {
         @Query("api_key") apiKey: String = BuildConfig.API_KEY,
     ): Response<MovieResponse>
 
-    fun searchMovie(): Response<MovieResponse>
+    @GET("/3/search/movie")
+    suspend fun searchMovie(
+        @Query("query") movieName: String,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY
+    ): Response<MovieResponse>
 
     fun getMovieDetails(): Response<MovieResponse.MovieDetails>
 
