@@ -46,7 +46,6 @@ object NetworkModule {
     @Singleton
     @Named(API_KINOCHECK_NAME)
     fun provideRetrofitKinocheck(): Retrofit {
-
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
