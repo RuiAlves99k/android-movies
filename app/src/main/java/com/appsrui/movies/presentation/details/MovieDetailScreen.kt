@@ -2,6 +2,7 @@ package com.appsrui.movies.presentation.details
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,6 +60,7 @@ fun MovieDetailScreen(
     movieDetailsViewModel: MovieDetailsViewModel = viewModel(),
     movieId: Int,
     navigateToHomeScreen: () -> Unit,
+    navigateToMovieDetailScreen: (String) -> Unit,
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -230,7 +232,11 @@ fun MovieDetailScreen(
                                 modifier = Modifier.padding(horizontal = 16.dp)
                             ) {
                                 items(movieDetailsUiState.similarMovies) { movie ->
-                                    Column {
+                                    Column(
+                                        modifier = Modifier.clickable {
+                                            navigateToMovieDetailScreen(movie.id.toString())
+                                        }
+                                    ) {
                                         AsyncImage(
                                             model = movie.moviePosterUrl,
                                             contentDescription = null,

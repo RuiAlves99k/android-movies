@@ -43,6 +43,11 @@ fun MoviesAppNavHost(navHostController: NavHostController) {
                         navHostController.navigate(
                             route = "home_screen"
                         )
+                    },
+                    navigateToMovieDetailScreen = { id ->
+                        navHostController.navigate(
+                            route = "detail_screen/$id"
+                        )
                     }
                 )
             }
