@@ -3,6 +3,7 @@ package com.appsrui.movies.data.remote
 import com.appsrui.movies.BuildConfig
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TMDBApi {
@@ -17,7 +18,11 @@ interface TMDBApi {
         @Query("api_key") apiKey: String = BuildConfig.API_KEY
     ): Response<MovieResponse>
 
-    fun getMovieDetails(): Response<MovieResponse.MovieDetails>
+    @GET("/3/movie/{movie_id}")
+    suspend fun getMovieDetails(
+        @Path("movie_id") movie: Int,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY
+    ): Response<MovieResponse.MovieDetails>
 
     fun getSimilarMovies(): Response<MovieResponse>
 }

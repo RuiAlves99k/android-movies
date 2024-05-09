@@ -47,6 +47,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.appsrui.movies.R
 import com.appsrui.movies.common.UiEvents
+import com.appsrui.movies.presentation.components.ErrorComponent
+import com.appsrui.movies.presentation.components.LoadingComponent
 import com.appsrui.movies.presentation.home.movies
 import com.appsrui.movies.presentation.theme.MoviesTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -62,6 +64,7 @@ fun MovieDetailScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(key1 = true) {
+        movieDetailsViewModel.getMovieDetails(movieId)
         movieDetailsViewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvents.SnackBarEvent -> {
@@ -80,173 +83,191 @@ fun MovieDetailScreen(
                     .fillMaxSize()
                     .background(Color(0xFF080C2C))
             ) {
-                LazyColumn {
-                    item {
-                        AsyncImage(
-                            model = "https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_Ratio0.6716_AL_.jpg",
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            placeholder = painterResource(R.drawable.movie_placeholder),
-                            modifier = Modifier.height(300.dp),
-                        )
 
-                        IconButton(
-                            onClick = { navigateToHomeScreen() },
-                            modifier = Modifier.align(Alignment.TopStart),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.ArrowBack,
+                if (movieDetailsUiState.isLoading) {
+                    Box(modifier = Modifier.align(Alignment.Center)) {
+                        LoadingComponent()
+                    }
+                }
+
+                if (!movieDetailsUiState.isLoading && movieDetailsUiState.errorMessage.isNotEmpty()) {
+                    Box(modifier = Modifier.align(Alignment.Center)) {
+                        ErrorComponent(errorMessage = movieDetailsUiState.errorMessage)
+                    }
+                }
+
+                if (!movieDetailsUiState.isLoading && movieDetailsUiState.movieDetails != null) {
+                    LazyColumn {
+                        item {
+                            AsyncImage(
+                                model = movieDetailsUiState.movieDetails.moviePosterUrl,
                                 contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(30.dp)
+                                contentScale = ContentScale.Crop,
+                                placeholder = painterResource(R.drawable.movie_placeholder),
+                                modifier = Modifier.height(300.dp),
+                            )
+
+                            IconButton(
+                                onClick = { navigateToHomeScreen() },
+                                modifier = Modifier.align(Alignment.TopStart),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.ArrowBack,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            }
+                        }
+                        item {
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp)
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Star,
+                                        contentDescription = null,
+                                        tint = Color(0xFFFF9E22),
+                                    )
+
+                                    Text(
+                                        text = movieDetailsUiState.movieDetails.averageVote.toString(),
+                                        color = Color.White,
+                                        modifier = Modifier.padding(start = 4.dp)
+                                    )
+
+                                    Spacer(modifier = Modifier.width(6.dp))
+
+                                    Divider(
+                                        modifier = Modifier
+                                            .height(12.dp)
+                                            .width(1.dp),
+                                        color = Color.LightGray,
+                                    )
+
+                                    Spacer(modifier = Modifier.width(6.dp))
+
+                                    Text(
+                                        text = movieDetailsUiState.movieDetails.totalVotes.toString(),
+                                        color = Color.LightGray,
+                                    )
+                                }
+                            }
+                        }
+                        item {
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            Text(
+                                text = movieDetailsUiState.movieDetails.title,
+                                color = Color.White,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 16.dp),
                             )
                         }
-                    }
-                    item {
-                        Spacer(modifier = Modifier.height(16.dp))
+                        item {
+                            Spacer(modifier = Modifier.height(12.dp))
 
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    imageVector = Icons.Filled.Star,
-                                    contentDescription = null,
-                                    tint = Color(0xFFFF9E22),
-                                )
-
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
                                 Text(
-                                    text = "9.0",
-                                    color = Color.White,
-                                    modifier = Modifier.padding(start = 4.dp)
-                                )
-
-                                Spacer(modifier = Modifier.width(6.dp))
-
-                                Divider(
-                                    modifier = Modifier
-                                        .height(12.dp)
-                                        .width(1.dp),
+                                    text = movieDetailsUiState.movieDetails.genres,
                                     color = Color.LightGray,
+                                    fontSize = 12.sp,
+                                )
+
+                                Spacer(modifier = Modifier.width(6.dp))
+
+                                Box(
+                                    modifier = Modifier
+                                        .size(6.dp)
+                                        .clip(CircleShape)
+                                        .background(Color.LightGray)
                                 )
 
                                 Spacer(modifier = Modifier.width(6.dp))
 
                                 Text(
-                                    text = "1200",
+                                    text = movieDetailsUiState.movieDetails.year,
                                     color = Color.LightGray,
                                 )
                             }
                         }
-                    }
-                    item {
-                        Spacer(modifier = Modifier.height(20.dp))
+                        item {
+                            Spacer(modifier = Modifier.height(20.dp))
 
-                        Text(
-                            text = "TOp Gun Maverick",
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(start = 16.dp),
-                        )
-                    }
-                    item {
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
                             Text(
-                                text = "Action, Adventure, Comedy",
-                                color = Color.LightGray,
+                                text = movieDetailsUiState.movieDetails.overview,
+                                color = Color.White,
                                 fontSize = 12.sp,
-                            )
-
-                            Spacer(modifier = Modifier.width(6.dp))
-
-                            Box(
-                                modifier = Modifier
-                                    .size(6.dp)
-                                    .clip(CircleShape)
-                                    .background(Color.LightGray)
-                            )
-
-                            Spacer(modifier = Modifier.width(6.dp))
-
-                            Text(
-                                text = "2022",
-                                color = Color.LightGray,
+                                textAlign = TextAlign.Start,
+                                modifier = Modifier.padding(start = 16.dp),
                             )
                         }
-                    }
-                    item {
-                        Spacer(modifier = Modifier.height(20.dp))
+                        item {
+                            Spacer(modifier = Modifier.height(20.dp))
 
-                        Text(
-                            text = "Neque porro quisquam est qui",
-                            color = Color.White,
-                            fontSize = 12.sp,
-                            textAlign = TextAlign.Start,
-                            modifier = Modifier.padding(start = 16.dp),
-                        )
-                    }
-                    item {
-                        Spacer(modifier = Modifier.height(20.dp))
+                            Text(
+                                text = "Similar Movies",
+                                color = Color.White,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
 
-                        Text(
-                            text = "Similar Movies",
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
+                            Spacer(modifier = Modifier.height(10.dp))
 
-                        Spacer(modifier = Modifier.height(10.dp))
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            ) {
+                                items(movies) { movie ->
+                                    Column {
+                                        AsyncImage(
+                                            model = movie.moviePosterUrl,
+                                            contentDescription = null,
+                                            contentScale = ContentScale.Crop,
+                                            placeholder = painterResource(id = R.drawable.movie_placeholder),
+                                            modifier = Modifier
+                                                .height(300.dp)
+                                                .clip(
+                                                    RoundedCornerShape(14.dp),
+                                                ),
+                                        )
+                                        Spacer(modifier = Modifier.height(8.dp))
 
-                        LazyRow(
-                            horizontalArrangement = Arrangement.spacedBy(10.dp),
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        ) {
-                            items(movies) { movie ->
-                                Column {
-                                    AsyncImage(
-                                        model = movie.moviePosterUrl,
-                                        contentDescription = null,
-                                        contentScale = ContentScale.Crop,
-                                        placeholder = painterResource(id = R.drawable.movie_placeholder),
-                                        modifier = Modifier
-                                            .height(300.dp)
-                                            .clip(
-                                                RoundedCornerShape(14.dp),
-                                            ),
-                                    )
-                                    Spacer(modifier = Modifier.height(8.dp))
+                                        Text(
+                                            text = movie.title ?: "---",
+                                            color = Color.White,
+                                            textAlign = TextAlign.Center,
+                                        )
+                                        if (movie.averageVote != null) {
+                                            Row(
+                                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                                modifier = Modifier.padding(
+                                                    top = 4.dp,
+                                                    bottom = 20.dp,
+                                                ),
+                                            ) {
+                                                Text(
+                                                    text = "${movie.averageVote}",
+                                                    color = Color.White
+                                                )
 
-                                    Text(
-                                        text = movie.title ?: "---",
-                                        color = Color.White,
-                                        textAlign = TextAlign.Center,
-                                    )
-                                    if (movie.averageVote != null) {
-                                        Row(
-                                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                            modifier = Modifier.padding(
-                                                top = 4.dp,
-                                                bottom = 20.dp,
-                                            ),
-                                        ) {
-                                            Text(text = "${movie.averageVote}", color = Color.White)
-
-                                            Icon(
-                                                imageVector = Icons.Filled.Star,
-                                                contentDescription = null,
-                                                tint = Color(0xFFFF9E22),
-                                            )
+                                                Icon(
+                                                    imageVector = Icons.Filled.Star,
+                                                    contentDescription = null,
+                                                    tint = Color(0xFFFF9E22),
+                                                )
+                                            }
                                         }
                                     }
                                 }

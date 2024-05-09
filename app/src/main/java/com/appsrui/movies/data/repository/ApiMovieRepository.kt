@@ -23,9 +23,11 @@ class ApiMovieRepository @Inject constructor(private val TMDBApi: TMDBApi) : Mov
         handleResponse(this, response)
     }.flowOn(Dispatchers.IO)
 
-    override fun getMoviesDetails(movieId: Int): Flow<Resource<MovieResponse.MovieDetails>> {
-        TODO("Not yet implemented")
-    }
+    override fun getMoviesDetails(movieId: Int): Flow<Resource<MovieResponse.MovieDetails>> =
+        flow {
+            val response = TMDBApi.getMovieDetails(movieId)
+            handleResponse(this, response)
+        }.flowOn(Dispatchers.IO)
 
     override fun getSimilarMovies(movieId: Int): Flow<Resource<MovieResponse>> {
         TODO("Not yet implemented")
