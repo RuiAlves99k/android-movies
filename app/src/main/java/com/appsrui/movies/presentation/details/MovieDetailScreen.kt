@@ -229,7 +229,7 @@ fun MovieDetailScreen(
                                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                                 modifier = Modifier.padding(horizontal = 16.dp)
                             ) {
-                                items(movies) { movie ->
+                                items(movieDetailsUiState.similarMovies) { movie ->
                                     Column {
                                         AsyncImage(
                                             model = movie.moviePosterUrl,

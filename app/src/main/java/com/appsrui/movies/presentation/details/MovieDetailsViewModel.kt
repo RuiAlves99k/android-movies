@@ -1,6 +1,5 @@
 package com.appsrui.movies.presentation.details
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.appsrui.movies.common.NOT_AVAILABLE
@@ -54,6 +53,24 @@ class MovieDetailsViewModel @Inject constructor(
         )
     }
 
+    private fun handleMovieResponse(movieResponse: MovieResponse?): List<MovieResponse.MovieDetails>? {
+        return movieResponse?.results?.map {
+            it.copy(
+                averageVote = it.averageVote?.roundOffDecimal(),
+                moviePosterUrl = "https://image.tmdb.org/t/p/w220_and_h330_face/${it.moviePosterUrl}",
+            )
+        }
+    }
+
+    private fun updateSimilarMovies(movies: List<MovieResponse.MovieDetails>?) {
+        viewModelScope.launch {
+            _movieDetailsUiState.value = _movieDetailsUiState.value.copy(
+                isLoading = false,
+                similarMovies = movies ?: emptyList()
+            )
+        }
+    }
+
     private fun updateMovieDetailsUiState(movieDetailsUi: MovieDetailsUi) {
         viewModelScope.launch {
             _movieDetailsUiState.value = _movieDetailsUiState.value.copy(
@@ -86,6 +103,7 @@ class MovieDetailsViewModel @Inject constructor(
                     is Resource.Success -> {
                         val movieDetails = handleMovieDetails(result.data)
                         updateMovieDetailsUiState(movieDetails)
+                        getSimilarMovies(movieId)
                     }
 
                     is Resource.Error -> {
@@ -98,5 +116,23 @@ class MovieDetailsViewModel @Inject constructor(
         }
     }
 
-    fun getSimilarMovies(movieId: Int) {}
+    fun getSimilarMovies(movieId: Int) {
+        viewModelScope.launch {
+            setUiStateIsLoading()
+            moviesRepository.getSimilarMovies(movieId).collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        val similarMovies = handleMovieResponse(result.data)
+                        updateSimilarMovies(similarMovies)
+                    }
+
+                    is Resource.Error -> {
+                        sendErrorUiState(result.message)
+                    }
+
+                    else -> _movieDetailsUiState
+                }
+            }
+        }
+    }
 }

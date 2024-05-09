@@ -24,5 +24,9 @@ interface TMDBApi {
         @Query("api_key") apiKey: String = BuildConfig.API_KEY
     ): Response<MovieResponse.MovieDetails>
 
-    fun getSimilarMovies(): Response<MovieResponse>
+    @GET("/3/movie/{movie_id}/similar")
+    suspend fun getSimilarMovies(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY
+    ): Response<MovieResponse>
 }
